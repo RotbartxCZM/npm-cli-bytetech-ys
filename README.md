@@ -1,4 +1,11 @@
 ### 字节第六期青训营项目一 - 包的分析工具
+
+#### 说明
+
+​	此文件为npm-cli-bytetech-ys 包的源代码
+
+​	项目NPM官网地址: https://www.npmjs.com/package/npm-cli-bytetech-ys
+
 #### 背景
 
 **一款npm包依赖分析工具,通过NPM命令行方式生成依赖关系,以json文件的形式存储到某个目录,或者将他以页面的形式在浏览器打开**

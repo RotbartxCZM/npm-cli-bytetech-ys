@@ -1,7 +1,9 @@
-.idea/*
-dist/*
-node_modules/*
+.idea
+dist
+.vscode
+node_modules
 packages/npm-packages-ui/.idea
 packages/npm-packages-ui/.vscode
-packages/npm-packages-ui/node_modules/*
-packages/npm-packages-ui/packages/*
+packages/npm-packages-ui/node_modules
+packages/npm-packages-ui/dist
+NPMREADME.md

@@ -8,6 +8,7 @@ const opn = require('opn');
 import { getFullDepTree } from './readDep/printDependencyGraph';
 import fs from 'fs';
 import os from 'os';
+import portfinder from 'portfinder';
 const program = new Command();
 //定义生成的循环树
 let dependenciesTree: dependenciesType;
@@ -93,26 +94,30 @@ const analyzeDependencies = (data: {
 	// 限制层数的话就传入限制的层数
 	if (data.depth) {
 		dependenciesTree = getFullDepTree(process.cwd(), data.depth);
+		console.log(dependenciesTree);
 	} else {
 		dependenciesTree = getFullDepTree(process.cwd());
 	}
 	if (!data.json) {
 		// active vue project
 		const app = express();
-		const vuePath: string = '/packages/npm-packages-ui/dist';
+		const vuePath: string = '../../packages/npm-packages-ui/dist';
 		const port = process.env.PORT || 3000;
-		const vueDistPath =path.join(process.cwd(), vuePath)
+		const vueDistPath = path.join(__dirname, vuePath);
 		// 设置静态资源路径
 		app.use(express.static(vueDistPath));
 		app.get('/getNpmAnalyzeRes', (req, res) => {
 			const data = { analyzeRes: dependenciesTree };
 			res.json(data); // 返回 JSON 数据
 		});
-
-		app.listen(port || 3000, () => {
-			const url = 'http://localhost:' + port;
-			console.log(colors.green(`✨ Server is running ${colors.bold(url)}`));
-			opn(url);
+		const host = 'localhost';
+		portfinder.setBasePort(3000);
+		portfinder.getPort((_: Error, port: number) => {
+			app.listen(port, () => {
+				const url = 'http://' + `${host}` + ':' + port;
+				console.log(colors.green(`✨ Server is running ${colors.bold(url)}`));
+				opn(url);
+			});
 		});
 	} else {
 		//相对路径
@@ -144,8 +149,9 @@ const analyzeDependencies = (data: {
 		//判断地址是否按照格式来写
 		if (os.type() == 'Darwin' || os.type() == 'Linux') {
 			//操作系统是linux和Mac的情况下
-			relativeReg.test(jsonFilePath)
-			if(!fs.existsSync(jsonFilePath)){}
+			relativeReg.test(jsonFilePath);
+			if (!fs.existsSync(jsonFilePath)) {
+			}
 		} else {
 			//操作系统是win的情况下
 			if (relativeReg.test(jsonFilePath)) {
